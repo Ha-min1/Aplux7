@@ -4,7 +4,7 @@ using UnityEngine;
 using SQLite4Unity3d;
 using System.IO;
 
-public class DatabaseInitializer : EditorWindow
+public class DatabaseInitializer : EditorWindow //제가만들었어요
 {
     [MenuItem("Tools/Initialize Database")]
     public static void InitializeDatabase()

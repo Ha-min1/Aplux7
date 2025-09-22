@@ -1,5 +1,5 @@
 using UnityEngine;
-using SQLite4Unity3d;
+using SQLite4Unity3d; // SQLite4Unity3d 패키지 필요함, 나중에 unity에 넣어놓는거 잊지말기
 using System.IO;
 using System;
 
@@ -7,6 +7,17 @@ public class DatabaseManager : MonoBehaviour
 {
     private SQLiteConnection dbConnection;
     private static DatabaseManager instance;
+
+    // 시간 seed 기반 무작위 playerID 생성, 예: P1234567890 (앞 6자리 무작위, 뒤 4자리 시간) 
+    // 후에 직접 입력으로 확장시킬 수도 있음
+    // 웹을 통해 계정 연동도 고려 가능
+        public static string GenerateRandomPlayerId()
+    {
+        long seed = DateTime.Now.Ticks;
+        System.Random rand = new System.Random((int)(seed & 0xFFFFFFFF));
+        string id = "P" + rand.Next(100000, 999999).ToString() + seed.ToString().Substring(seed.ToString().Length - 4);
+        return id;
+    }
 
     public static DatabaseManager Instance
     {
