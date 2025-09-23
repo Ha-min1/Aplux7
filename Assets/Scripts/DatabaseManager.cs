@@ -53,28 +53,41 @@ public class DatabaseManager : MonoBehaviour
 
     private void InitializeDatabase()
     {
-        string dbName = "PlayerProgress.db";
-        string dbPath;
+    string dbName = "PlayerProgress.db";
+    string dbPath;
 
 #if UNITY_EDITOR
-        dbPath = Path.Combine(Application.dataPath, "StreamingAssets", dbName);
+    dbPath = Path.Combine(Application.dataPath, "StreamingAssets", dbName);
 #else
-        dbPath = Path.Combine(Application.persistentDataPath, dbName);
+    dbPath = Path.Combine(Application.persistentDataPath, dbName);
+    string sourcePath = Path.Combine(Application.streamingAssetsPath, dbName);
+    if (!File.Exists(dbPath))
+    {
+        try
+        {
+        File.Copy(sourcePath, dbPath);
+        Debug.Log($"Database file copied from {sourcePath} to {dbPath}");
+        }
+        catch (Exception ex)
+        {
+        Debug.LogError($"Failed to copy database file: {ex.Message}");
+        }
+    }
 #endif
 
-        // 디렉토리 생성 확인
-        string directory = Path.GetDirectoryName(dbPath);
-        if (!Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
+    // 디렉토리 생성 확인
+    string directory = Path.GetDirectoryName(dbPath);
+    if (!Directory.Exists(directory))
+    {
+        Directory.CreateDirectory(directory);
+    }
 
-        // 데이터베이스 연결
-        dbConnection = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
-        Debug.Log("Database initialized at: " + dbPath);
+    // 데이터베이스 연결
+    dbConnection = new SQLiteConnection(dbPath, SQLiteOpenFlags.ReadWrite | SQLiteOpenFlags.Create);
+    Debug.Log("Database initialized at: " + dbPath);
 
-        // 테이블 생성
-        dbConnection.CreateTable<PlayerProgress>();
+    // 테이블 생성
+    dbConnection.CreateTable<PlayerProgress>();
     }
 
     // PlayerProgress 모델 클래스
